@@ -21,6 +21,8 @@ module.exports = async ({ getNamedAccounts, deployments}) => { // auto-pulled bo
             log: true, // outputs all these 4 values: deploying "MockV3Aggregator" (tx: 0x2f60bd4cba5dffe33cd22380f4891cfadb7f13aad763bb084e8a1c3336b892f9)...: deployed at 0x5FbDB2315678afecb367f032d93F642f64180aa3 with 569635 gas
             args: [DECIMALS, INITIAL_ANSWER],
         })
+
+        log(`Deployer deploying FundMe: 01-deploy-fund-me.js:, ${deployer}`)
         //to be incl. in the 'if' structure itself
         log("00: Mocks deployed!!")
         log("---------------------------------------------")

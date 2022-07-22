@@ -43,7 +43,9 @@ module.exports = async ({ getNamedAccounts, deployments}) => { // auto-pulled bo
         waitConfirmation: network.config.blockConfirmations,  // and not blocks' confirmation which, otherwise, is ideally correct
         //waitConfirmation: network.config.blockConfirmations || 1, ---- by Patrick
         //commented out the above line in actual code 1 above the above line, because it may wait only for 1 block confirmation and etherscan may throw an error stating that wait for at least 5 blockConfirmation before submitting gthe contract for verification.
-    })
+        })
+
+        log(`Deployer deploying FundMe: 01-deploy-fund-me.js:, ${deployer}`)
 
     if(!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         // verify code (utils) will be executed here.
