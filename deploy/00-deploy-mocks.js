@@ -12,6 +12,7 @@ module.exports = async ({ getNamedAccounts, deployments}) => { // auto-pulled bo
     const {deploy, log} = deployments //deploy and log are functions
     const {deployer} = await getNamedAccounts() // deployer is an account
     const chainId = network.config.chainId // in case chainId is not there, we will use chain.name (or direct value 31337) in the if struct below instead of chainId
+    // Also, this chainId is never read in this script as we're using developmentChains.includes(network.name) in "if" block
 
     if(developmentChains.includes(network.name)){               // in place of -- developmentChains.includes(chain.name) condition, we hardcoded it to 31337, for now.
         log("Local network (not testnets/mainnet) detected, deploying the mocks...")

@@ -7,7 +7,7 @@ require("hardhat-gas-reporter")
 require("solidity-coverage")
 require("hardhat-deploy")
 
-const RINKEBY_RPC_URL = process.env.RINKEBY_RPC_URL || "https://eth-rinkeby"
+const RINKEBY_RPC_URL = process.env.RINKEBY_RPC_URL || "https://eth-rinkeby.alchemyapi.io/v2/s-nj9OTPBrtTKzx7n2It6M2h_EUj55HR"
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "Oxkey"
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "key"
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "key"
@@ -46,6 +46,7 @@ module.exports = {
     coinmarketcap: COINMARKETCAP_API_KEY,
     token: "ETH",
   },
+  
   namedAccounts: {
     deployer:{
       default: 0,

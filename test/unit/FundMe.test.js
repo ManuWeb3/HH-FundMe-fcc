@@ -1,21 +1,27 @@
 //const { inputToConfig } = require("@ethereum-waffle/compiler")
 const { assert, expect } = require("chai")
 const { deployments, ethers, getNamedAccounts } = require("hardhat")
+const {developmentChains} = require("../../helper-hardhat-config")
 
-describe("FundMe", function () {
-   
+!developmentChains.includes(network.name) ?
+describe.skip
+: describe("FundMe", function () {
+    //  "deployer" has to be declared globally with "let" as it'll be used in many "it" blocks down.
+    //  that's why deployer = (await getNamedAccounts()).deployer syntax used in beforeEach()
     let fundMe, deployer, mockV3Aggregator// big issue, scope has to be global for it() to access all these, should not be inside beforeEach
     //const sendValue = "1000000000000000000" // 1 ETH // will check parseEther and parseUnits - July 20
     const sendValue = ethers.utils.parseEther("1") //- July 20
 
-    beforeEach(async function () { // deploy FundMe contract using Hardhat-deploy => FundMe deployment will come along with our 00 and 01 deploy scripts in deploy folder.
+    beforeEach(async function () {                      // deploy FundMe contract using Hardhat-deploy => FundMe deployment will come along with our 00 and 01 deploy scripts in deploy folder.
         
         //const accounts = await ethers.getSigners()    // July 19
         //const accountZero = accounts[0]               //July 19
 
-        deployer = (await getNamedAccounts()).deployer // line expl. in July 18, 2022 + updated July 19
-        await deployments.fixture(["all"]) // eveyrthing gets executed in the deploy folder with this.
-        fundMe = await ethers.getContract("FundMe", deployer) //export ethers from HH, HH-deploy wraps ethers with getContract function, as Patrick said it verbose.
+        deployer = (await getNamedAccounts()).deployer  // line expl. in July 18, 2022 + updated July 19
+        await deployments.fixture(["all"])              // eveyrthing gets executed in the deploy folder with this.
+        // Raffle. syntax use - const {deployer} = await getNamedAccounts(), also works
+        // getContract() for both
+        fundMe = await ethers.getContract("FundMe", deployer)   //export ethers from HH, HH-deploy wraps ethers with getContract function, as Patrick said it verbose.
         //getContract()returns the most recent deployed instance of the contract
        // console.log(`Deployer deploying FundMe, ${deployer}`)
         mockV3Aggregator = await ethers.getContract("MockV3Aggregator", deployer) //address where this gets deployed
@@ -114,10 +120,12 @@ describe("FundMe", function () {
 
         })
 
-        it("Only allow the owner to withdraw the funds", async function (){
+        it.only("Only allow the owner to withdraw the funds", async function (){
             const accounts = await ethers.getSigners()
             const attacker = accounts[1]
             const attackerFundMeConnected = await fundMe.connect(attacker)
+            // for contract.connect(accounts[1]), NOT (accounts[1].address), UNLIKE getContract("contract", deployer)...
+            // where deployer = accounts[0].address
             await expect (attackerFundMeConnected.withdraw()).to.be.revertedWith("FundMe__NotOwner")
         })
 
@@ -183,3 +191,4 @@ describe("FundMe", function () {
         })
     })
 })
+

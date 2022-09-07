@@ -6,6 +6,7 @@ const verify = async (contractAddress, args) => {
     await run("verify:verify", {
       address: contractAddress,
       constructorArguments: args, //what this constructor arguments : args is doing here??
+                                  // I believe - it's taking in those args that's required to be passed into the Constructor of FundMe.sol while deploying
   })}
   
   catch (e) {
