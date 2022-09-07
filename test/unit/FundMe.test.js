@@ -120,7 +120,7 @@ describe.skip
 
         })
 
-        it.only("Only allow the owner to withdraw the funds", async function (){
+        it("Only allow the owner to withdraw the funds", async function (){
             const accounts = await ethers.getSigners()
             const attacker = accounts[1]
             const attackerFundMeConnected = await fundMe.connect(attacker)
