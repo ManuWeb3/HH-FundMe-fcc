@@ -74,7 +74,7 @@ contract FundMe {
     * @param
      */
 
-    function withdraw() payable onlyOwner public {
+    function withdraw() onlyOwner public {
         for (uint256 funderIndex=0; funderIndex < s_funders.length; funderIndex++){
             address funder = s_funders[funderIndex];
             s_addressToAmountFunded[funder] = 0;
