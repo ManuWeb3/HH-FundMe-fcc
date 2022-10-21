@@ -17,13 +17,15 @@ error FundMe__NotOwner();
 
 contract FundMe {
     using PriceConverter for uint256;
+    // using 'Library' for 'Type'
 
     mapping(address => uint256) private s_addressToAmountFunded;
     address[] private s_funders;
 
     // Could we make this constant?  /* hint: no! We should make it immutable! */
     address private /* immutable */ i_owner;
-    uint256 public constant MINIMUM_USD = 50 * 10 ** 18;
+    uint256 public constant MINIMUM_USD = 50 * 10 ** 18;    
+    // for users, it's USD 50.00 only, internally, for calc., we made it 50 * 10 ** 18
     
     AggregatorV3Interface private s_priceFeed;
 
@@ -57,6 +59,9 @@ contract FundMe {
     * @param 
     */
     function fund() public payable {
+        // we can only send ETH_Amount in {value} (recall Remix)... 
+        // to compare it with total USD that it's worth, we have to get ts price from AggV3Int... 
+        // then compare with MINIMUM_USD
         require(msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD,"You need to spend more ETH buddy!");
         // require(PriceConverter.getConversionRate(msg.value) >= MINIMUM_USD, "You need to spend more ETH!");
         s_addressToAmountFunded[msg.sender] += msg.value;
@@ -79,7 +84,10 @@ contract FundMe {
             address funder = s_funders[funderIndex];
             s_addressToAmountFunded[funder] = 0;
         }
+        // nullify the array now
         s_funders = new address[](0);
+        // state changed above: to avoid reentrancy, send at the end
+
         // // transfer
         // payable(msg.sender).transfer(address(this).balance);
         // // send
@@ -96,7 +104,8 @@ contract FundMe {
             address funder = funders[funderIndex];
             s_addressToAmountFunded[funder] = 0;
     }
-    s_funders = new address[](0); //actual / real array has to be reset to 0, not the dummy one (memory)
+    s_funders = new address[](0); //actual / real array has to be reset to 0 (outright nullified), not the dummy one (memory)
+    
     (bool callSuccess, ) = payable(msg.sender).call{value: address(this).balance}("");
         require(callSuccess, "Call failed");
     }
